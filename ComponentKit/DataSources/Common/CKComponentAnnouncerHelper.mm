@@ -18,6 +18,7 @@ namespace CK {
   }
 
   // used by the add/remove code to store the listeners.
+  /// 用一个 OC 的对象 CKComponentAnnouncerBase 持有这个指向 Vector(装有listener) 的智能指针
   static void storeListeners(CKComponentAnnouncerBase *self, std::shared_ptr<const std::vector<__weak id>> newListeners) {
     self->_listenerVector = newListeners;
   }
@@ -42,7 +43,9 @@ namespace CK {
   }
 
   void Component::AnnouncerHelper::addListener(CKComponentAnnouncerBase *self, SEL s, id listener) {
+      /// self 是入参 🤣
     if (self->_listenerVector) {
+        /// std::中 find 函数 eg: https://en.cppreference.com/w/cpp/algorithm/find#Example
       if (std::find(self->_listenerVector->begin(), self->_listenerVector->end(), listener) != self->_listenerVector->end()) {
         // Multiple notifications to the same listener are not allowed.
         return;
@@ -54,9 +57,12 @@ namespace CK {
       storeListeners(self, newListeners);
     } else {
       // create a new empty listener vector
+      /// 使用 make_str 创建一个智能指针指向一个 Vecor 容器
       auto newListeners = std::make_shared<std::vector<__weak id>>();
       // add the new listener
+      /// 把 listener 压栈
       newListeners->push_back(listener);
+        
       storeListeners(self, newListeners);
     }
   }

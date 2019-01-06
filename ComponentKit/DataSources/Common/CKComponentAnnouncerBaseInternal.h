@@ -26,6 +26,7 @@
     add/remove is not a frequent event.
  n.b. using boost::shared_ptr might lead to faster code, since it's lockless
  */
+  /// 使用智能指针管理 listenerVector 
   std::shared_ptr<const std::vector<__weak id>> _listenerVector;
 }
 @end
